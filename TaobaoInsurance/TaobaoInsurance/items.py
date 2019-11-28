@@ -67,4 +67,17 @@ class PurchasedDetailItem(scrapy.Item):
     _id = scrapy.Field()  #商品编号，String
     product_name = scrapy.Field()  #商品名称，String
     seller_id = scrapy.Field()  #店铺编号，String
-    seller_name= scrapy.Field() #店铺名称,
+    seller_name = scrapy.Field()  #店铺名称, String
+    
+    purchased_daily = scrapy.Field()  #日销量数据，Object
+    
+'''产品保障方案'''
+
+class InsuredInfoItem(scrapy.Item):
+
+    is_insured = scrapy.Field()  #管道使用，Number
+    
+    _id = scrapy.Field()  #商品编号，String
+    product_name = scrapy.Field()  #商品名称，String
+    seller_id = scrapy.Field()  #店铺编号，String
+    
