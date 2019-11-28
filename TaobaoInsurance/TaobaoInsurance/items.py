@@ -55,5 +55,16 @@ class PurchasedInfoItem(scrapy.Item):
     product_name = scrapy.Field()  #商品名称，String
     seller_id = scrapy.Field()  #店铺编号，String
     seller_name = scrapy.Field()  #店铺名称，String
-    
-    
+
+    purchased_total = scrapy.Field()  #销量总计，Object
+
+'''购买记录（详细）'''
+
+class PurchasedDetailItem(scrapy.Item):
+
+    is_detail = scrapy.Field()  #管道识别，Number
+
+    _id = scrapy.Field()  #商品编号，String
+    product_name = scrapy.Field()  #商品名称，String
+    seller_id = scrapy.Field()  #店铺编号，String
+    seller_name= scrapy.Field() #店铺名称,
