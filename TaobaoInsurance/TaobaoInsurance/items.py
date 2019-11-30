@@ -80,4 +80,7 @@ class InsuredInfoItem(scrapy.Item):
     _id = scrapy.Field()  #商品编号，String
     product_name = scrapy.Field()  #商品名称，String
     seller_id = scrapy.Field()  #店铺编号，String
+    seller_name = scrapy.Field()  #店铺名称，String
+    
+    insured_data = scrapy.Field()  #保障内容，Object
     
