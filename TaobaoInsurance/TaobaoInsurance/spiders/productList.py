@@ -1,6 +1,6 @@
 import scrapy
 
-from TaobaoInsurance.items import ProductInfoItem, SellerInfoItem
+from TaobaoInsurance.items import ProductInfoItem
 
 class productListSpider(scrapy.Spider):
 
@@ -19,4 +19,10 @@ class productListSpider(scrapy.Spider):
             product_item['is_product'] = 1
             product_item['product_name'] = each_product.css('span.li-title-t::text').get()
             product_item['product_url'] = 'https://baoxian.taobao.com' + each_product.css('div.li-title a::attr(href)').get()
-            
+            product_item['_id'] = each_product.css('div.li-title a::attr(href)').get()[each_product.css('div.li-title a::attr(href)').get().rfind('=') + 1 :]
+
+            yield product_item
+        
+        next_page = response.css('a.next::attr(href)').get()
+        if next_page is not None:
+            yield response.follow(next_page,callback=self.parse)
