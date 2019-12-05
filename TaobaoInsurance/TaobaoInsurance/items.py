@@ -46,6 +46,15 @@ class ProductInfoItem(scrapy.Item):
 
     seller_id = scrapy.Field()  # 店铺编号，String
 
+'''商品历史信息'''
+
+class ProductHistoryItem(scrapy.Item):
+
+    is_producthis = scrapy.Field()  #管道识别，Number
+    
+    _id = scrapy.Field()    #商品编号，String
+    data= scrapy.Field()    #历史数据，Object
+
 
 '''购买记录'''
 

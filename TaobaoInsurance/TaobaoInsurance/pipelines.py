@@ -7,6 +7,7 @@
 import pymongo,time
 
 from scrapy.utils.project import get_project_settings
+from TaobaoInsurance.items import ProductHistoryItem
 
 settings = get_project_settings()
 
@@ -31,7 +32,7 @@ class ProductListPipeline(object):
 
         process_data= dict(item)
 
-        if process_data.__contains__('is_product'):
+        if process_data.__contains__('is_product'): #管道判断
             product_found= self.doc_product.find_one({'_id':process_data['_id']})
 
             if product_found is None:
@@ -44,5 +45,27 @@ class ProductListPipeline(object):
                     return item
 
                 else:
-                    process_data.update({'update_time'})
-                    self.doc_product.update_one()
+                    process_data.update({'update_time': time.strftime('%Y-%m-%d', time.localtime())})
+                    process_data.update({'create_time': product_found['create_time']})
+
+                    self.doc_history = zd_client['product_history']
+                    history_found = self.doc_history.find_one({'_id': process_data['_id']})
+                    
+                    if history_found is None:
+                        history_data = ProductHistoryItem()
+                        history_data['_id'] = process_data['_id']
+                        history_data['data'] = {}
+                        history_data['data'].insert({
+                            time.strftime('%Y-%m-%d', time.localtime()):product_found
+                        })
+                    
+                    else:
+                        history_found['data'].insert({
+                            time.strftime('%Y-%m-%d', time.localtime()): product_found
+                        })
+                    
+                    self.doc_product.update_one({'_id': process_data['_id']}, {'$set': process_data})
+                    return item
+        
+        else:
+            return item
