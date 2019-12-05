@@ -11,7 +11,6 @@ class productListSpider(scrapy.Spider):
     def parse(self, response):
         
         product_data = response.css('div.insurance-listblock')
-        
         product_item = ProductInfoItem()
         
         for each_product in product_data:
@@ -25,5 +24,6 @@ class productListSpider(scrapy.Spider):
             yield product_item
         
         next_page = response.css('a.next::attr(href)').get()
+        
         if next_page is not None:
             yield response.follow(next_page,callback=self.parse)
