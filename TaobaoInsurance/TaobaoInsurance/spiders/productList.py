@@ -20,6 +20,7 @@ class productListSpider(scrapy.Spider):
             product_item['product_url'] = 'https://baoxian.taobao.com' + each_product.css('div.li-title a::attr(href)').get()
             product_item['_id'] = each_product.css('div.li-title a::attr(href)').get()[each_product.css('div.li-title a::attr(href)').get().rfind('=') + 1 :]
             product_item['seller_id'] = each_product.css('span.li-title-ww a::attr(href)').get()[each_product.css('span.li-title-ww a::attr(href)').get().rfind('=') + 1 :]
+            product_item['seller_nick']= each_product.css('span.li-title-ww a span::text').get()
 
             yield product_item
         

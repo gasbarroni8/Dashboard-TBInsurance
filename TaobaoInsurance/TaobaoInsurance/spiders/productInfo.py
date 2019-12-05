@@ -1,9 +1,9 @@
-import scrapy, pymongo, json
+# import scrapy, pymongo, json
 
-from TaobaoInsurance.items import ProductItem
+# from TaobaoInsurance.items import ProductItem
 
-class productInfoSpider(scrapy.Spider):
+# class productInfoSpider(scrapy.Spider):
 
-    name = 'productInfo'
+#     name = 'productInfo'
     
     

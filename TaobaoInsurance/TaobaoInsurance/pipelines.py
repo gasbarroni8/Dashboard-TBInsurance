@@ -15,7 +15,8 @@ settings = get_project_settings()
 
 zd_host = settings['MONGODB_HOST']
 zd_port = settings['MONGODB_PORT']
-zd_client= pymongo.MongoClient(host=zd_host,port=zd_port)
+zd_client = pymongo.MongoClient(host=zd_host, port=zd_port)
+zd_db= zd_client['TaobaoInsurance']
 
 # class TaobaoinsurancePipeline(object):
 #     def process_item(self, item, spider):
@@ -24,7 +25,7 @@ zd_client= pymongo.MongoClient(host=zd_host,port=zd_port)
 class ProductListPipeline(object):
 
     def __init__(self):
-       self.doc_product= zd_client['product_info']
+       self.doc_product= zd_db['product_info']
 
     def process_item(self,item,spider):
 
@@ -48,21 +49,24 @@ class ProductListPipeline(object):
                     process_data.update({'update_time': time.strftime('%Y-%m-%d', time.localtime())})
                     process_data.update({'create_time': product_found['create_time']})
 
-                    self.doc_history = zd_client['product_history']
+                    self.doc_history = zd_db['product_history']
                     history_found = self.doc_history.find_one({'_id': process_data['_id']})
                     
                     if history_found is None:
                         history_data = ProductHistoryItem()
                         history_data['_id'] = process_data['_id']
                         history_data['data'] = {}
-                        history_data['data'].insert({
+                        history_data['data'].update({
                             time.strftime('%Y-%m-%d', time.localtime()):product_found
                         })
+                        zd_db['product_history'].insert(history_data)
                     
                     else:
                         history_found['data'].insert({
                             time.strftime('%Y-%m-%d', time.localtime()): product_found
                         })
+                        new_data = history_found['data']
+                        self.doc_history.update_one({'_id':process_data['_id']},{'$set':new_data})
                     
                     self.doc_product.update_one({'_id': process_data['_id']}, {'$set': process_data})
                     return item

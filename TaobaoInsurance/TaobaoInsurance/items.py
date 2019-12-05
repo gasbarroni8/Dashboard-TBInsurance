@@ -45,6 +45,7 @@ class ProductInfoItem(scrapy.Item):
     product_tags = scrapy.Field()  # 商品标签，String
 
     seller_id = scrapy.Field()  # 店铺编号，String
+    seller_nick= scrapy.Field() #店铺名称，String
 
 '''商品历史信息'''
 
