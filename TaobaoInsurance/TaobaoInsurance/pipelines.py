@@ -109,3 +109,30 @@ class TaobaoinsurancePipeline(object):
         
 #         else:
 #             return item
+
+'''version2'''
+
+class ProductListPipeline(object):
+
+    def __init__(self):
+
+        self.doc_productInfo = zd_db['product_info']
+        self.doc_sellerInfo = zd_db['seller_info']
+        
+    def process_item(self, item, spider):
+        
+        process_data = dict(item)
+        
+        '''产品相关'''
+
+        if process_data.__contains__('is_productList'):
+
+            product_found = self.doc_productInfo.find_one({'product_id': process_data['product_id']})
+            
+            if product_found is None:
+
+                del process_data['is_productList']
+                self.doc_productInfo.insert(process_data)
+
+            else:
+                
