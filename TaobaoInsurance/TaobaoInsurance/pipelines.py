@@ -105,3 +105,6 @@ class ProductInfoPipeline(object):
                         self.doc_product.update_one({'_id': process_data['_id']}, {'$set': {product_key: process_data[product_key]}})
                 
                 return item
+        
+        else:
+            return item
