@@ -67,7 +67,8 @@ DOWNLOAD_DELAY = 3
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
 #    'TaobaoInsurance.pipelines.TaobaoinsurancePipeline': 300,
-    'TaobaoInsurance.pipelines.ProductListPipeline':300,
+    'TaobaoInsurance.pipelines.ProductListPipeline': 300,
+    'TaobaoInsurance.pipelines.ProductInfoPipeline': 301,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)

@@ -18,19 +18,19 @@ class productInfoSpider(scrapy.Spider):
 
     '''正式用例'''
     
-    # start_urls = []
+    start_urls = []
     
-    # doc_product = zd_db['product_info']
-    # doc_data = doc_product.find()
+    doc_product = zd_db['product_info']
+    doc_data = doc_product.find()
     
-    # for each_product in doc_data:
+    for each_product in doc_data:
 
-    #     json_url = 'https://baoxian.taobao.com/json/item/info.do?item_id=' + each_product['_id']       
-    #     start_urls.append(json_url)
+        json_url = 'https://baoxian.taobao.com/json/item/info.do?item_id=' + str(each_product['_id'])       
+        start_urls.append(json_url)
     
     '''调试用例'''
 
-    start_urls=['https://baoxian.taobao.com/json/item/info.do?item_id=540732488665']
+    # start_urls=['https://baoxian.taobao.com/json/item/info.do?item_id=540732488665']
     
     def parse(self, response):
 
@@ -39,7 +39,7 @@ class productInfoSpider(scrapy.Spider):
 
         product_item['is_productInfo'] = 1
 
-        product_item['_id'] = response_data['itemId']
+        product_item['_id'] = str(response_data['itemId'])
         product_item['product_tags'] = response_data['itemTags']
         product_item['product_collected'] = response_data['collectorCount']
 

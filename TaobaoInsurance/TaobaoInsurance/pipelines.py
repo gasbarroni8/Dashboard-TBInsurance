@@ -78,7 +78,7 @@ class ProductListPipeline(object):
 class ProductInfoPipeline(object):
 
     def __init__(self):
-        self.product_doc = zd_db['product_info']
+        self.doc_product = zd_db['product_info']
     
     def process_item(self, item, spider):
         
@@ -87,4 +87,21 @@ class ProductInfoPipeline(object):
         process_data = dict(item)
         
         if process_data.__contains__('is_productInfo'):
+            product_found = self.doc_product.find_one({'_id': process_data['_id']})
+
+            if product_found is None:
+                return item
             
+            else:
+
+                for product_key in process_data.keys():
+
+                    if product_found.__contains__(product_key):
+                        if product_found[product_key] == process_data[product_key]:
+                            pass
+                        else:
+                            self.doc_product.update_one({'_id': process_data['_id']}, {'$set': {product_key: process_data[product_key]}})
+                    else:
+                        self.doc_product.update_one({'_id': process_data['_id']}, {'$set': {product_key: process_data[product_key]}})
+                
+                return item
