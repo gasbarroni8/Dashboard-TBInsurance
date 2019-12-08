@@ -37,7 +37,7 @@ class productInfoSpider(scrapy.Spider):
         product_item = ProductInfoItem()
         response_data = json.loads(response.text)
 
-        product_item['is_product'] = 1
+        product_item['is_productInfo'] = 1
 
         product_item['_id'] = response_data['itemId']
         product_item['product_tags'] = response_data['itemTags']

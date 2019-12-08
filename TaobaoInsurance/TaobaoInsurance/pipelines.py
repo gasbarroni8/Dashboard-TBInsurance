@@ -33,7 +33,7 @@ class ProductListPipeline(object):
 
         process_data= dict(item)
 
-        if process_data.__contains__('is_product'): #管道判断
+        if process_data.__contains__('is_productList'): #管道判断
             product_found= self.doc_product.find_one({'_id':process_data['_id']})
 
             if product_found is None:
@@ -75,3 +75,16 @@ class ProductListPipeline(object):
             return item
 
 
+class ProductInfoPipeline(object):
+
+    def __init__(self):
+        self.product_doc = zd_db['product_info']
+    
+    def process_item(self, item, spider):
+        
+        '''item转dict'''
+
+        process_data = dict(item)
+        
+        if process_data.__contains__('is_productInfo'):
+            

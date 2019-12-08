@@ -33,8 +33,9 @@ class SellerInfoItem(scrapy.Item):
 
 
 class ProductInfoItem(scrapy.Item):
-    is_product = scrapy.Field()  # 管道识别，Number
-
+    is_productList = scrapy.Field()  # 管道识别，Number
+    is_productInfo = scrapy.Field()  #管道识别，Number
+    
     _id = scrapy.Field()  # 商品编号，String
     product_name = scrapy.Field()  # 商品名称，String
     product_url = scrapy.Field()  # 商品地址，String
