@@ -45,6 +45,9 @@ class ProductInfoItem(scrapy.Item):
     product_tags = scrapy.Field()  # 商品标签，String
     product_buylimit = scrapy.Field()  #购买限制，Number
 
+    product_purchasedurl = scrapy.Field()  #产品购买详情地址，String
+    product_insuredurl = scrapy.Field()  #产品爆涨详情地址，String
+
     seller_id = scrapy.Field()  # 店铺编号，String
     seller_nick = scrapy.Field()  #店铺名称，String
     seller_comp = scrapy.Field()  #公司名称，String

@@ -43,9 +43,33 @@ class productInfoSpider(scrapy.Spider):
         product_item['product_tags'] = response_data['itemTags']
         product_item['product_collected'] = response_data['collectorCount']
 
+        '''产品价格'''
+
         product_priceRange = response_data['price']
         product_item['product_maxprice'] = product_priceRange[product_priceRange.rfind('~') + 1 :]
         product_item['product_minprice'] = product_priceRange[: product_priceRange.rfind('~') - 1]
+
+        '''产品详情'''
+
+        product_data = response_data['skuItem']
+        product_item['product_detail']= {}
+        
+        for each_data in product_data:
+
+            temp_keys = each_data['skuTitle']
+            temp_values = []
+
+            for values in each_data['skuMapId'].values():
+                temp_values.append(values)
+            
+            product_item['product_detail'].update({temp_keys: temp_values})
+            
+
+
+        '''地址'''
+
+        product_item['product_purchasedurl'] = 'https://baoxian.taobao.com' + response_data['purchaseUrl']
+        product_item['product_insuredurl'] = 'https://baoxian.taobao.com' + response_data['insuredProjectUrl']
         
 
         product_item['seller_comp'] = response_data['sellerComp']
