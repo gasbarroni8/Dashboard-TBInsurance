@@ -26,9 +26,9 @@ class TaobaoinsuranceItem(scrapy.Item):
 
 class SellerInfoItem(scrapy.Item):
 
-    is_seller = scrapy.Field()  # 管道识别，number
-
     '''version1'''
+
+    # is_seller = scrapy.Field()  # 管道识别，number
 
     # _id = scrapy.Field()  # 店铺编号，string
     # seller_nick = scrapy.Field()  # 店铺名称，string
@@ -85,6 +85,7 @@ class ProductInfoItem(scrapy.Item):
     is_productHis = scrapy.Field()  #管道识别，number
 
     product_id = scrapy.Field()  #商品编号，string
+    product_name = scrapy.Field()  #商品名称，string
     product_url = scrapy.Field()  #商品地址，string
     product_maxprice = scrapy.Field()  #商品最高价，number
     product_minprice = scrapy.Field()  #商品最低价，number
@@ -92,6 +93,7 @@ class ProductInfoItem(scrapy.Item):
     product_collected = scrapy.Field()  #商品收藏数量，number
     product_tags = scrapy.Field()  #商品标签，array
     product_buylimit = scrapy.Field()  #商品购买限制，number
+    product_detail = scrapy.Field()  #商品详情，json
     product_purchase = scrapy.Field()  #购买数据，bson
     product_insured = scrapy.Field()  #保障信息，bson
     time_online = scrapy.Field()  #上线时间，string
