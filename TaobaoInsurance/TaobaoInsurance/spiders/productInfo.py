@@ -46,9 +46,15 @@ class productInfoSpider(scrapy.Spider):
         '''产品价格'''
 
         product_priceRange = response_data['price']
-        product_item['product_maxprice'] = product_priceRange[product_priceRange.rfind('~') + 1 :]
-        product_item['product_minprice'] = product_priceRange[: product_priceRange.rfind('~') - 1]
 
+        if product_priceRange.find('~') != -1:
+            product_item['product_maxprice'] = product_priceRange[product_priceRange.rfind('~') + 1 :]
+            product_item['product_minprice'] = product_priceRange[: product_priceRange.rfind('~') - 1]
+
+        else:
+            product_item['product_maxprice'] = product_priceRange
+            product_item['product_minprice'] = product_priceRange
+            
         '''产品详情'''
 
         product_data = response_data['skuItem']

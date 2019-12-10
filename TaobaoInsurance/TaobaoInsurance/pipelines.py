@@ -34,7 +34,7 @@ class ProductListPipeline(object):
         process_data= dict(item)
 
         if process_data.__contains__('is_productList'): #管道判断
-            product_found= self.doc_product.find_one({'_id':process_data['_id']})
+            product_found = self.doc_product.find_one({'_id': process_data['_id']})
 
             if product_found is None:
                 process_data.update({'create_time':time.strftime('%Y-%m-%d' , time.localtime())})
