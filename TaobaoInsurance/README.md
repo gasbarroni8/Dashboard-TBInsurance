@@ -31,13 +31,13 @@
 
 ```json
 {
-    '_id':,
-    'seller_id':'',
-    'seller_name':'',
-    'seller_comp':'',
-    'seller_url':'',
-    'product_list':[],
-	'history_list':[],
+    "_id":,
+    "seller_id":"",
+    "seller_name":"",
+    "seller_comp":"",
+    "seller_url":"",
+    "product_list":[],
+	"history_list":[],
 }
 ```
 
@@ -45,39 +45,39 @@
 
 #####	2.2	产品信息（product_info）&产品历史信息（product_history）
 
-| 属性名称          | 值类型 | 备注                                         |
-| ----------------- | ------ | -------------------------------------------- |
-| _id               | bson   | 自动生成ObjectId。                           |
-| product_id        | string | 产品唯一编号。                               |
-| product_url       | string | 产品链接地址。                               |
-| product_maxprice  | number | 产品最高价格。                               |
-| product_minprice  | number | 产品最低价格。                               |
-| product_sellcount | number | 产品售出份数。                               |
-| product_tags      | array  | 产品标签列表，单个标签为String格式。         |
-| product_buylimit  | number | 产品购买限制。                               |
-| product_detail    | json   | 产品方案详情。                               |
-| product_purchase  | bson   |                                              |
-| product_insured   | bson   |                                              |
-| time_online       | string | 产品上线时间，精确到日，格式为“yyyy-mm-dd”。 |
-| time_offline      | string | 产品下线时间，精确到日，格式为“yyyy-mm-dd”。 |
+| 属性名称          | 值类型 | 备注                                 |
+| ----------------- | ------ | ------------------------------------ |
+| _id               | bson   | 自动生成ObjectId。                   |
+| product_id        | string | 产品唯一编号。                       |
+| product_url       | string | 产品链接地址。                       |
+| product_maxprice  | number | 产品最高价格。                       |
+| product_minprice  | number | 产品最低价格。                       |
+| product_sellcount | number | 产品售出份数。                       |
+| product_tags      | array  | 产品标签列表，单个标签为String格式。 |
+| product_buylimit  | number | 产品购买限制。                       |
+| product_detail    | json   | 产品方案详情。                       |
+| product_purchase  | bson   |                                      |
+| product_insured   | bson   |                                      |
+| time_online       | string | 产品上线时间，格式为“yyyy-mm-dd”。   |
+| time_offline      | string | 产品下线时间，格式为“yyyy-mm-dd”。   |
 
 #####	范例
 
 ```json
 {
-    '_id':'',
-    'product_id':'',
-    'product_url':'',
-    'product_maxprice':,
-    'product_minprice':,
-    'product_sellcount':,
-    'product_tags':'',
-    'product_buylimit':,
-    'product_detail':,
-    'product_purchase':,
-    'product_insured':,
-    'time_online':,
-    'time_offline':,
+    "_id":“”,
+    "product_id":“”,
+    "product_url":"",
+    "product_maxprice":,
+    "product_minprice":,
+    "product_sellcount":,
+    "product_tags":"",
+    "product_buylimit":,
+    "product_detail":,
+    "product_purchase":,
+    "product_insured":,
+    "time_online":,
+    "time_offline":,
 }
 ```
 
@@ -96,9 +96,22 @@
 ```json
 {
     ‘_id’:,
-    'product_id':'',
-    '20191210':{},
-	'20191211':{},
+    "product_id":"",
+    "20191210":{},
+	"20191211":{},
 }
 ```
+
+
+
+#####	2.4	产品相关文档（product_insured）
+
+| 属性名称     | 值类型 | 备注                                           |
+| ------------ | ------ | ---------------------------------------------- |
+| _id          | bson   | 自动生成的ObjectId。                           |
+| product_id   | string | 产品唯一编号。                                 |
+| histroy_id   | string | 历史信息编号，对应2.2中product_info的“_id”值。 |
+| time_online  | string | 产品上线时间，格式为“yyyy-mm-dd”。             |
+| time_offline | string | 产品下线时间，格式为“yyyy-mm-dd”。             |
+|              |        |                                                |
 
