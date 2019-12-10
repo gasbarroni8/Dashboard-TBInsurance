@@ -65,8 +65,8 @@
 
 ```json
 {
-    "_id":“”,
-    "product_id":“”,
+    "_id":"",
+    "product_id":"",
     "product_url":"",
     "product_maxprice":,
     "product_minprice":,
@@ -95,7 +95,7 @@
 
 ```json
 {
-    ‘_id’:,
+    "_id":,
     "product_id":"",
     "20191210":{},
 	"20191211":{},
@@ -113,5 +113,19 @@
 | histroy_id   | string | 历史信息编号，对应2.2中product_info的“_id”值。 |
 | time_online  | string | 产品上线时间，格式为“yyyy-mm-dd”。             |
 | time_offline | string | 产品下线时间，格式为“yyyy-mm-dd”。             |
-|              |        |                                                |
+| *title*      | json   | 文档内容，标题为key，内容对value。             |
+
+#####	范例
+
+```json
+{
+    "_id":,
+    "product_id":"",
+    "history_id":"",
+    "time_online":"",
+    "time_offline":"",
+    "保障内容":{},
+	"投保须知":{},
+}
+```
 
