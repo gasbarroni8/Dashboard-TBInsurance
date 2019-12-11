@@ -114,6 +114,24 @@ class TaobaoinsurancePipeline(object):
 
 class ProductListPipeline(object):
 
+    '''productList管道处理内容'''
+
+    # 该管道处理由productList.py中提交的product_item和seller_item
+    
+    # product_item包含如下字段：
+    # is_productList--->管道识别用
+    # product_name--->产品名称
+    # product_url--->产品链接
+    # product_id--->产品识别号
+
+    # seller_item包含如下字段：
+    # is_seller--->管道识别用
+    # seller_id--->商户识别号
+    # seller_name--->商户名称
+
+    # 处理思路：
+    # 判断表中有无存储，如果没有则插入，有的话在该管道不做处理
+
     def __init__(self):
 
         self.doc_productInfo = zd_db['product_info']
@@ -122,8 +140,6 @@ class ProductListPipeline(object):
     def process_item(self, item, spider):
         
         process_data = dict(item)
-        
-        '''产品相关'''
 
         if process_data.__contains__('is_productList'):
 
@@ -133,6 +149,26 @@ class ProductListPipeline(object):
 
                 del process_data['is_productList']
                 self.doc_productInfo.insert(process_data)
+                return item
 
             else:
-                
+
+                return item
+
+        elif process_data.__contains__('is_seller'):
+
+            seller_found = self.doc_sellerInfo.find_one({'seller_id': process_data['seller_id']})
+            
+            if seller_found is None:
+
+                del process_data['is_seller']
+                self.doc_sellerInfo.insert(process_data)
+                return item
+
+            else:
+
+                return item
+        
+        else:
+    
+            return item
