@@ -171,6 +171,7 @@ class ProductInfoPipeline(object):
     # product_id--->产品唯一编号
     # product_tags--->产品标签
     # product_collected--->收藏人数
+    # product_sellcount--->售出份数
     # product_maxprice--->产品最高价
     # product_minprice--->产品最低价
     # product_detail--->产品详情
@@ -179,6 +180,7 @@ class ProductInfoPipeline(object):
     # seller_item包含如下字段：
     # is_sellerInfo--->管道识别用，管道处理完删除该字段
     # seller_id--->店铺编号
+    # seller_name--->店铺名称
     # seller_comp--->公司名称
 
     # 处理思路：

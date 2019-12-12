@@ -124,6 +124,7 @@ class productInfoSpider(scrapy.Spider):
         product_item['product_tags'] = response_data['itemTags']
         product_item['product_tags'].sort()
         product_item['product_collected'] = response_data['collectorCount']
+        product_item['product_sellcount'] = response_data['sellCount']
         
         product_priceRange = str(response_data['price'])
 
