@@ -93,22 +93,22 @@ class productInfoSpider(scrapy.Spider):
 
     '''正式'''
 
-    # doc_productInfo = zd_db['product_info']
-    # doc_sellerInfo = zd_db['seller_info']
+    doc_productInfo = zd_db['product_info']
+    doc_sellerInfo = zd_db['seller_info']
     
-    # start_urls = []
+    start_urls = []
     
-    # data_productInfo = doc_productInfo.find()
-    # data_sellerInfo = doc_sellerInfo.find()
+    data_productInfo = doc_productInfo.find()
+    data_sellerInfo = doc_sellerInfo.find()
     
-    # for each_product in data_productInfo:
+    for each_product in data_productInfo:
 
-    #     json_url = 'https://baoxian.taobao.com/json/item/info.do?item_id=' + str(each_product['product_id'])
-    #     start_urls.append(json_url)
+        json_url = 'https://baoxian.taobao.com/json/item/info.do?item_id=' + str(each_product['product_id'])
+        start_urls.append(json_url)
     
     '''测试'''
 
-    start_urls = ['https://baoxian.taobao.com/json/item/info.do?item_id=540732488665']
+    # start_urls = ['https://baoxian.taobao.com/json/item/info.do?item_id=540732488665']
     
     def parse(self, response):
         
@@ -120,7 +120,7 @@ class productInfoSpider(scrapy.Spider):
 
         product_item['is_productInfo'] = 1
 
-        product_item['product_id'] = response_data['itemId']
+        product_item['product_id'] = str(response_data['itemId'])
         product_item['product_tags'] = response_data['itemTags']
         product_item['product_tags'].sort()
         product_item['product_collected'] = response_data['collectorCount']
@@ -156,7 +156,7 @@ class productInfoSpider(scrapy.Spider):
         yield product_item
 
         seller_item['is_sellerInfo'] = 1
-        seller_item['seller_id'] = response_data['shopId']
+        seller_item['seller_id'] = str(response_data['shopId'])
         seller_item['seller_comp'] = response_data['sellerComp']
         
         yield seller_item

@@ -201,7 +201,7 @@ class ProductInfoPipeline(object):
     # seller_comp--->公司名称
 
     # 处理思路：
-    # 1.判断表中有无对应字段，有则判断有无更新，无则直接插入字段
+    # 判断表中有无对应字段，有则判断有无更新，无则直接插入字段
     # 更新依据 ：
     # product_tags
     # product_maxprice
@@ -210,8 +210,6 @@ class ProductInfoPipeline(object):
     # 这4项直接更新
     # product_detail
     # 这项单独更新，如果更新了将更新前信息存如seller_info的product_history中
-    # 2.判断公司归属
-    # 3.在seller_info中插入product_list字段，不重复
 
     def __init__(self):
 
@@ -234,9 +232,44 @@ class ProductInfoPipeline(object):
                     pass
 
                 else:
+                    
+                    #先复制历史数据，存入历史表
 
                     history_data = copy.deepcopy(product_found)
                     history_data.update({
                         'archeived_date': time.strftime('%Y-%m-%d', time.localtime())
                     })
                     self.doc_productHistory.insert(history_data)
+            
+            else:
+
+                pass
+            
+            del process_data['is_productInfo']
+            del process_data['product_id']
+
+            for key_process in process_data.keys():
+
+                self.doc_productInfo.update_one({'product_id': product_found['product_id']}, {'$set': {key_process: process_data[key_process]}})
+            
+            return item
+            
+        elif process_data.__contains__('is_sellerInfo'):
+
+            seller_found= self.doc_sellerInfo.find_one({'seller_id':process_data['seller_id']})
+
+            del process_data['is_sellerInfo']
+            del process_data['seller_id']
+
+            if seller_found.__contains__('seller_comp'):
+
+                return item
+
+            else:
+                
+                self.doc_sellerInfo.update_one({'seller_id':process_data['seller_id']},{'$set':{'seller_comp':process_data['seller_comp']}})
+                return item
+        
+        else:
+
+            return item
