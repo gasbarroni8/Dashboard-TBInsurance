@@ -114,18 +114,20 @@ class TaobaoinsurancePipeline(object):
 
 class ProductListPipeline(object):
 
-    '''productList管道处理内容'''
+    '''ProductListPipeline处理内容'''
 
     # 该管道处理由productList.py中提交的product_item和seller_item
     
+    # 该管道的识别标识为is_productList和is_sellerList
+
     # product_item包含如下字段：
-    # is_productList--->管道识别用
+    # is_productList--->管道识别用，管道处理完删除该字段
     # product_name--->产品名称
     # product_url--->产品链接
     # product_id--->产品识别号
 
     # seller_item包含如下字段：
-    # is_seller--->管道识别用
+    # is_sellerList--->管道识别用，管道处理完删除该字段
     # seller_id--->商户识别号
     # seller_name--->商户名称
 
@@ -155,13 +157,13 @@ class ProductListPipeline(object):
 
                 return item
 
-        elif process_data.__contains__('is_seller'):
+        elif process_data.__contains__('is_sellerList'):
 
             seller_found = self.doc_sellerInfo.find_one({'seller_id': process_data['seller_id']})
             
             if seller_found is None:
 
-                del process_data['is_seller']
+                del process_data['is_sellerList']
                 self.doc_sellerInfo.insert(process_data)
                 return item
 
@@ -172,3 +174,24 @@ class ProductListPipeline(object):
         else:
     
             return item
+
+class ProductInfoPipeline(object):
+
+    '''ProductInfoPipeline处理内容'''
+
+    # 该管道处理由productInfo.py中提交的product_item和seller_item
+
+    # 该管道的识别标识为为is_productInfo和is_sellerInfo
+
+    # product_item包含如下字段：
+    # is_productInfo--->管道识别用，管道处理完删除该字段
+    # product_id--->产品唯一编号
+    # product_tags--->产品标签
+    # product_collected--->收藏人数
+    # product_maxprice--->产品最高价
+    # product_minprice--->产品最低价
+    # product_detail--->产品详情
+    # seller_id--->店铺编号
+
+    # seller_item包含如下字段：
+    
