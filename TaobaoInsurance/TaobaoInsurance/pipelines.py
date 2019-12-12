@@ -4,7 +4,8 @@
 #
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
 # See: https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-import pymongo,time
+import pymongo, time, operator,copy
+
 
 from scrapy.utils.project import get_project_settings
 
@@ -133,6 +134,7 @@ class ProductListPipeline(object):
 
     # 处理思路：
     # 判断表中有无存储，如果没有则插入，有的话在该管道不做处理
+    # 创建产品列表和历史产品列表
 
     def __init__(self):
 
@@ -194,4 +196,47 @@ class ProductInfoPipeline(object):
     # seller_id--->店铺编号
 
     # seller_item包含如下字段：
-    
+    # is_sellerInfo--->管道识别用，管道处理完删除该字段
+    # seller_id--->店铺编号
+    # seller_comp--->公司名称
+
+    # 处理思路：
+    # 1.判断表中有无对应字段，有则判断有无更新，无则直接插入字段
+    # 更新依据 ：
+    # product_tags
+    # product_maxprice
+    # product_minprice
+    # product_collected
+    # 这4项直接更新
+    # product_detail
+    # 这项单独更新，如果更新了将更新前信息存如seller_info的product_history中
+    # 2.判断公司归属
+    # 3.在seller_info中插入product_list字段，不重复
+
+    def __init__(self):
+
+        self.doc_productInfo= zd_db['product_info']
+        self.doc_sellerInfo= zd_db['seller_info']
+        self.doc_productHistory= zd_db['product_history']
+
+    def process_item(self, item, spider):
+        
+        process_data= dict(item)
+
+        if process_data.__contains__('is_productInfo'):
+
+            product_found= self.doc_productInfo.find_one({'product_id':process_data['product_id']})
+
+            if product_found.__contains__('product_detail'):
+
+                if operator.eq(product_found['product_detail'], process_data['product_detail']) is True:
+                    
+                    pass
+
+                else:
+
+                    history_data = copy.deepcopy(product_found)
+                    history_data.update({
+                        'archeived_date': time.strftime('%Y-%m-%d', time.localtime())
+                    })
+                    self.doc_productHistory.insert(history_data)

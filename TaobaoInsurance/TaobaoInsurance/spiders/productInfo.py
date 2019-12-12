@@ -122,6 +122,7 @@ class productInfoSpider(scrapy.Spider):
 
         product_item['product_id'] = response_data['itemId']
         product_item['product_tags'] = response_data['itemTags']
+        product_item['product_tags'].sort()
         product_item['product_collected'] = response_data['collectorCount']
         
         product_priceRange = response_data['price']
@@ -145,6 +146,8 @@ class productInfoSpider(scrapy.Spider):
 
             for values in each_data['skuMapId'].values():
                 temp_values.append(values)
+            
+            temp_values.sort()
             
             product_item['product_detail'].update({temp_keys: temp_values})
         
