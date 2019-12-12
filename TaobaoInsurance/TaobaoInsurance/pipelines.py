@@ -117,9 +117,9 @@ class ProductListPipeline(object):
 
     '''ProductListPipeline处理内容'''
 
-    # 该管道处理由productList.py中提交的product_item和seller_item
+    # 该管道处理由productList.py中提交的product_item
     
-    # 该管道的识别标识为is_productList和is_sellerList
+    # 该管道的识别标识为is_productList
 
     # product_item包含如下字段：
     # is_productList--->管道识别用，管道处理完删除该字段
@@ -127,14 +127,9 @@ class ProductListPipeline(object):
     # product_url--->产品链接
     # product_id--->产品识别号
 
-    # seller_item包含如下字段：
-    # is_sellerList--->管道识别用，管道处理完删除该字段
-    # seller_id--->商户识别号
-    # seller_name--->商户名称
 
     # 处理思路：
     # 判断表中有无存储，如果没有则插入，有的话在该管道不做处理
-    # 创建产品列表和历史产品列表
 
     def __init__(self):
 
@@ -153,20 +148,6 @@ class ProductListPipeline(object):
 
                 del process_data['is_productList']
                 self.doc_productInfo.insert(process_data)
-                return item
-
-            else:
-
-                return item
-
-        elif process_data.__contains__('is_sellerList'):
-
-            seller_found = self.doc_sellerInfo.find_one({'seller_id': process_data['seller_id']})
-            
-            if seller_found is None:
-
-                del process_data['is_sellerList']
-                self.doc_sellerInfo.insert(process_data)
                 return item
 
             else:
@@ -258,18 +239,12 @@ class ProductInfoPipeline(object):
 
             seller_found= self.doc_sellerInfo.find_one({'seller_id':process_data['seller_id']})
 
-            del process_data['is_sellerInfo']
-            del process_data['seller_id']
+            if seller_found is None:
 
-            if seller_found.__contains__('seller_comp'):
-
+                del process_data['is_sellerInfo']
+                self.doc_sellerInfo.insert(process_data)
                 return item
-
+            
             else:
-                
-                self.doc_sellerInfo.update_one({'seller_id':process_data['seller_id']},{'$set':{'seller_comp':process_data['seller_comp']}})
-                return item
-        
-        else:
 
-            return item
+                return item

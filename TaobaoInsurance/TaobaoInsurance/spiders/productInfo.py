@@ -125,7 +125,7 @@ class productInfoSpider(scrapy.Spider):
         product_item['product_tags'].sort()
         product_item['product_collected'] = response_data['collectorCount']
         
-        product_priceRange = response_data['price']
+        product_priceRange = str(response_data['price'])
 
         if product_priceRange.find('~') != -1:
             product_item['product_maxprice'] = product_priceRange[product_priceRange.rfind('~') + 1 :]
@@ -151,12 +151,14 @@ class productInfoSpider(scrapy.Spider):
             
             product_item['product_detail'].update({temp_keys: temp_values})
         
-        product_item['seller_id'] = response_data['shopId']
+        product_item['seller_id'] = str(response_data['shopId'])
         
         yield product_item
 
         seller_item['is_sellerInfo'] = 1
         seller_item['seller_id'] = str(response_data['shopId'])
         seller_item['seller_comp'] = response_data['sellerComp']
+        seller_item['seller_name'] = response_data['sellerNick']
+        
         
         yield seller_item
