@@ -206,7 +206,6 @@ class SellerInfoPipeline(object):
 
             return item
 
-
 class ProductInfoPipeline(object):
 
     '''ProductInfoPipeline处理内容'''
@@ -255,7 +254,7 @@ class ProductInfoPipeline(object):
 
             seller_found['product_list'].append(process_data['product_id'])
             set(seller_found['product_list'])
-            self.doc_seller.update_one({'seller_id': process_data['seller_id']}, {'$set': {'product_list': seller_found['product_list']}})
+            self.doc_sellerInfo.update_one({'seller_id': process_data['seller_id']}, {'$set': {'product_list': seller_found['product_list']}})
                   
             if product_found.__contains__('product_detail'):
 
