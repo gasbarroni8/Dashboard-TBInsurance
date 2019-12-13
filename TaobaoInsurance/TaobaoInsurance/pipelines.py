@@ -206,8 +206,26 @@ class ProductInfoPipeline(object):
 
         if process_data.__contains__('is_productInfo'):
 
-            product_found= self.doc_productInfo.find_one({'product_id':process_data['product_id']})
+            product_found = self.doc_productInfo.find_one({'product_id': process_data['product_id']})
+            
+            sellerinfo_found = self.doc_sellerInfo.find_one({'seller_id': process_data['seller_id']})
+            
+            if sellerinfo_found.__contains__('product_list'):
 
+                sellerinfo_found['product_list'].append(process_data['product_id'])
+
+                set(sellerinfo_found['product_list'])
+
+                self.doc_sellerInfo.update_one({'seller_id': process_data['seller_id']}, {'$set': {'product_list': sellerinfo_found['product_list']}})
+
+            else:
+
+                new_product_list = []
+
+                new_product_list.append(process_data['product_id'])
+
+                self.doc_sellerInfo.update_one({'seller_id': process_data['seller_id']}, {'$set': {'product_list': new_product_list}})
+                  
             if product_found.__contains__('product_detail'):
 
                 if operator.eq(product_found['product_detail'], process_data['product_detail']) is True:
@@ -216,14 +234,20 @@ class ProductInfoPipeline(object):
 
                 else:
                     
-                    #先复制历史数据，存入历史表
+                    #先复制历史数据，存入历史表,将返回的主键存入seller_info中的history_list
 
                     history_data = copy.deepcopy(product_found)
                     history_data.update({
                         'archeived_date': time.strftime('%Y-%m-%d', time.localtime())
                     })
-                    self.doc_productHistory.insert(history_data)
-            
+                    id_result = self.doc_productHistory.insert(history_data)
+                    
+                    new_history_list = self.doc_sellerInfo.find_one({'seller_id': process_data['seller_id']})['history_list']
+                    
+                    new_history_list.append(id_result)
+
+                    self.doc_sellerInfo.update_one({'seller_Info': process_data['seller_info']}, {'$set': {'history_list': new_history_list}})
+                    
             else:
 
                 pass
@@ -250,3 +274,7 @@ class ProductInfoPipeline(object):
             else:
 
                 return item
+        
+        else:
+
+            return item
