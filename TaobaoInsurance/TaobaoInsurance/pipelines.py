@@ -134,7 +134,6 @@ class ProductListPipeline(object):
     def __init__(self):
 
         self.doc_productInfo = zd_db['product_info']
-        self.doc_sellerInfo = zd_db['seller_info']
         
     def process_item(self, item, spider):
         
@@ -158,13 +157,63 @@ class ProductListPipeline(object):
     
             return item
 
+class SellerInfoPipeline(object):
+
+    '''SellerInfoPipeline处理内容'''
+
+    # 该管道处理由productInfo.py中提交的seller_item
+
+    # 该管道的识别标识为is_sellerInfo
+
+    # seller_item包含如下字段：
+    # is_sellerInfo--->管道识别用，管道处理完删除该字段
+    # seller_id--->店铺编号
+    # seller_name--->店铺名称
+    # seller_comp--->公司名称
+
+    # 处理思路：
+    # 1.判断表中有无存储，如果没有则插入，如果有的话不在该管道进行处理
+    # 2.该管道在存储信息时，同步添加product_list以及history_list两个字段
+
+    def __init__(self):
+        
+        self.doc_sellerInfo = zd_db['seller_info']
+        
+    def process_item(self, item, spider):
+        
+        process_data= dict(item)
+
+        if process_data.__contains__('is_sellerInfo'):
+
+            seller_found = self.doc_sellerInfo.find_one({'seller_id': process_data['seller_id']})
+            
+            if seller_found is None:
+
+                del process_data['is_sellerInfo']
+                new_productList = []
+                new_historyList = []
+                process_data.update({'product_list': new_productList})
+                process_data.update({'history_list': new_historyList})
+                
+                self.doc_sellerInfo.insert(process_data)
+                return item
+            
+            else:
+                
+                return item
+        
+        else:
+
+            return item
+
+
 class ProductInfoPipeline(object):
 
     '''ProductInfoPipeline处理内容'''
 
     # 该管道处理由productInfo.py中提交的product_item和seller_item
 
-    # 该管道的识别标识为为is_productInfo和is_sellerInfo
+    # 该管道的识别标识为is_productInfo
 
     # product_item包含如下字段：
     # is_productInfo--->管道识别用，管道处理完删除该字段
@@ -176,12 +225,6 @@ class ProductInfoPipeline(object):
     # product_minprice--->产品最低价
     # product_detail--->产品详情
     # seller_id--->店铺编号
-
-    # seller_item包含如下字段：
-    # is_sellerInfo--->管道识别用，管道处理完删除该字段
-    # seller_id--->店铺编号
-    # seller_name--->店铺名称
-    # seller_comp--->公司名称
 
     # 处理思路：
     # 判断表中有无对应字段，有则判断有无更新，无则直接插入字段
@@ -208,23 +251,11 @@ class ProductInfoPipeline(object):
 
             product_found = self.doc_productInfo.find_one({'product_id': process_data['product_id']})
             
-            sellerinfo_found = self.doc_sellerInfo.find_one({'seller_id': process_data['seller_id']})
-            
-            if sellerinfo_found.__contains__('product_list'):
+            seller_found = self.doc_sellerInfo.find_one({'seller_id': process_data['seller_id']})
 
-                sellerinfo_found['product_list'].append(process_data['product_id'])
-
-                set(sellerinfo_found['product_list'])
-
-                self.doc_sellerInfo.update_one({'seller_id': process_data['seller_id']}, {'$set': {'product_list': sellerinfo_found['product_list']}})
-
-            else:
-
-                new_product_list = []
-
-                new_product_list.append(process_data['product_id'])
-
-                self.doc_sellerInfo.update_one({'seller_id': process_data['seller_id']}, {'$set': {'product_list': new_product_list}})
+            seller_found['product_list'].append(process_data['product_id'])
+            set(seller_found['product_list'])
+            self.doc_seller.update_one({'seller_id': process_data['seller_id']}, {'$set': {'product_list': seller_found['product_list']}})
                   
             if product_found.__contains__('product_detail'):
 

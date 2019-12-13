@@ -68,7 +68,8 @@ DOWNLOAD_DELAY = 4
 ITEM_PIPELINES = {
     # 'TaobaoInsurance.pipelines.TaobaoinsurancePipeline': 300,
     'TaobaoInsurance.pipelines.ProductListPipeline': 300,
-    'TaobaoInsurance.pipelines.ProductInfoPipeline': 301,
+    'TaobaoInsurance.pipelines.SellerInfoPipeline': 301,
+    'TaobaoInsurance.pipelines.ProductInfoPipeline': 302,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
