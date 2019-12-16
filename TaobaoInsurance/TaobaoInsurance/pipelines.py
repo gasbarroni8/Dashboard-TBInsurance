@@ -246,18 +246,17 @@ class ProductInfoPipeline(object):
         
         process_data= dict(item)
 
+        # print(process_data)
+
         if process_data.__contains__('is_productInfo'):
 
-            product_found = self.doc_productInfo.find_one({'product_id': process_data['product_id']})
+            product_found = self.doc_productInfo.find_one({'product_id': str(process_data['product_id'])})
             
-            seller_found = self.doc_sellerInfo.find_one({'seller_id': process_data['seller_id']})
-
-            data_productList = seller_found['product_list']
-            data_productList.append(process_data['product_id'])
-            set(data_productList)
-            # seller_found['product_list'].append(process_data['product_id'])
-            # set(seller_found['product_list'])
-            self.doc_sellerInfo.update_one({'seller_id': process_data['seller_id']}, {'$set': {'product_list': data_productList}})
+            seller_found = self.doc_sellerInfo.find_one({'seller_id': str(process_data['seller_id'])})
+            
+            seller_found['product_list'].append(process_data['product_id'])
+            set(seller_found['product_list'])
+            self.doc_sellerInfo.update_one({'seller_id': process_data['seller_id']}, {'$set': {'product_list': seller_found['product_list']}})
                   
             if product_found.__contains__('product_detail'):
 

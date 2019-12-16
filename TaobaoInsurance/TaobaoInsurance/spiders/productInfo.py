@@ -152,7 +152,7 @@ class productInfoSpider(scrapy.Spider):
             
             product_item['product_detail'].update({temp_keys: temp_values})
         
-        product_item['seller_id'] = str(response_data['shopId'])
+        product_item['seller_id'] = str(response_data['sellerId'])
         
         yield product_item
 
