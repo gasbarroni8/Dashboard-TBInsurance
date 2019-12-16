@@ -19,6 +19,7 @@ class puchasedInfoSpider(scrapy.Spider):
     '''正式'''
 
     doc_sellerInfo = zd_db['seller_info']
+    start_urls=[]
 
     # 根据每个文档中的seller_id和product_list中的product_id拼接链接而成
 
@@ -26,3 +27,14 @@ class puchasedInfoSpider(scrapy.Spider):
     
     data_sellerInfo = doc_sellerInfo.find()
 
+    for each_seller in data_sellerInfo:
+
+        each_sellerId= each_seller['seller_id']
+
+        for each_productId in each_seller['product_list']:
+
+            target_url= base_url+'seller_id='+each_sellerId+'&item_id='+ each_productId
+            start_urls.append(target_url)
+    
+    def parse(self,response):
+    
