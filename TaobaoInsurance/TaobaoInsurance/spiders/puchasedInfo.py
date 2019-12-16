@@ -36,5 +36,12 @@ class puchasedInfoSpider(scrapy.Spider):
             target_url= base_url+'seller_id='+each_sellerId+'&item_id='+ each_productId
             start_urls.append(target_url)
     
+    '''调试'''
+
+    # start_urls= ['http://baoxian.taobao.com/json/item/purchaseList.do?item_id=540732488665&seller_id=2967530750']
+    
     def parse(self,response):
+
+        response_data= json.loads(response.text)
+        
     
