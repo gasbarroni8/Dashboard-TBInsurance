@@ -210,7 +210,7 @@ class ProductInfoPipeline(object):
 
     '''ProductInfoPipeline处理内容'''
 
-    # 该管道处理由productInfo.py中提交的product_item和seller_item
+    # 该管道处理由productInfo.py中提交的product_item
 
     # 该管道的识别标识为is_productInfo
 
@@ -252,9 +252,12 @@ class ProductInfoPipeline(object):
             
             seller_found = self.doc_sellerInfo.find_one({'seller_id': process_data['seller_id']})
 
-            seller_found['product_list'].append(process_data['product_id'])
-            set(seller_found['product_list'])
-            self.doc_sellerInfo.update_one({'seller_id': process_data['seller_id']}, {'$set': {'product_list': seller_found['product_list']}})
+            data_productList = seller_found['product_list']
+            data_productList.append(process_data['product_id'])
+            set(data_productList)
+            # seller_found['product_list'].append(process_data['product_id'])
+            # set(seller_found['product_list'])
+            self.doc_sellerInfo.update_one({'seller_id': process_data['seller_id']}, {'$set': {'product_list': data_productList}})
                   
             if product_found.__contains__('product_detail'):
 
@@ -291,19 +294,19 @@ class ProductInfoPipeline(object):
             
             return item
             
-        elif process_data.__contains__('is_sellerInfo'):
+        # elif process_data.__contains__('is_sellerInfo'):
 
-            seller_found= self.doc_sellerInfo.find_one({'seller_id':process_data['seller_id']})
+        #     seller_found= self.doc_sellerInfo.find_one({'seller_id':process_data['seller_id']})
 
-            if seller_found is None:
+        #     if seller_found is None:
 
-                del process_data['is_sellerInfo']
-                self.doc_sellerInfo.insert(process_data)
-                return item
+        #         del process_data['is_sellerInfo']
+        #         self.doc_sellerInfo.insert(process_data)
+        #         return item
             
-            else:
+        #     else:
 
-                return item
+        #         return item
         
         else:
 
