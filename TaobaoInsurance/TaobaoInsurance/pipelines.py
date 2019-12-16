@@ -161,7 +161,7 @@ class SellerInfoPipeline(object):
 
     '''SellerInfoPipeline处理内容'''
 
-    # 该管道处理由productInfo.py中提交的seller_item
+    # 该管道处理由sellerInfo.py中提交的seller_item
 
     # 该管道的识别标识为is_sellerInfo
 

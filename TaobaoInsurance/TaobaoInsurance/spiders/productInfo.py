@@ -156,10 +156,10 @@ class productInfoSpider(scrapy.Spider):
         
         yield product_item
 
-        seller_item['is_sellerInfo'] = 1
-        seller_item['seller_id'] = str(response_data['shopId'])
-        seller_item['seller_comp'] = response_data['sellerComp']
-        seller_item['seller_name'] = response_data['sellerNick']
+        # seller_item['is_sellerInfo'] = 1
+        # seller_item['seller_id'] = str(response_data['sellerId'])
+        # seller_item['seller_comp'] = response_data['sellerComp']
+        # seller_item['seller_name'] = response_data['sellerNick']
         
         
-        yield seller_item
+        # yield seller_item

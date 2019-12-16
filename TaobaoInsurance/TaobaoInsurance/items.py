@@ -40,7 +40,6 @@ class SellerInfoItem(scrapy.Item):
 
     '''version2'''
 
-    is_sellerList = scrapy.Field()  #管道识别，number
     is_sellerInfo = scrapy.Field()  #管道识别，number
 
     seller_id = scrapy.Field()  #店铺编号，string
@@ -48,6 +47,9 @@ class SellerInfoItem(scrapy.Item):
     seller_comp = scrapy.Field()  #公司名称，string
     seller_group = scrapy.Field()  #集团名称，string
     seller_class = scrapy.Field()  #公司分类，string
+    shop_id = scrapy.Field()  #商铺编号，String
+    shop_name = scrapy.Field()  #商铺名称，String
+    product_count = scrapy.Field()  #产品数量，Number
     
     product_list = scrapy.Field()  #产品列表，array
     histroy_list = scrapy.Field()  #产品历史，array
