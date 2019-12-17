@@ -14,32 +14,32 @@ zd_db = zd_client['TaobaoInsurance']
 
 class puchasedInfoSpider(scrapy.Spider):
 
-    name = 'puchasedInfo'
+    name = 'purchasedInfo'
     
     '''正式'''
 
-    doc_sellerInfo = zd_db['seller_info']
-    start_urls = []
+    # doc_sellerInfo = zd_db['seller_info']
+    # start_urls = []
 
-    # 根据每个文档中的seller_id和product_list中的product_id拼接链接而成
+    # # 根据每个文档中的seller_id和product_list中的product_id拼接链接而成
 
-    base_url = 'http://baoxian.taobao.com/json/item/purchaseList.do?'
+    # base_url = 'http://baoxian.taobao.com/json/item/purchaseList.do?'
     
-    data_sellerInfo = doc_sellerInfo.find()
+    # data_sellerInfo = doc_sellerInfo.find()
 
-    for each_seller in data_sellerInfo:
+    # for each_seller in data_sellerInfo:
 
-        each_sellerId = each_seller['seller_id']
+    #     each_sellerId = each_seller['seller_id']
 
-        for each_productId in each_seller['product_list'] :
+    #     for each_productId in each_seller['product_list'] :
 
-            target_url = base_url + 'seller_id=' + each_sellerId + '&item_id=' + each_productId + '&pageNo=1'
+    #         target_url = base_url + 'seller_id=' + each_sellerId + '&item_id=' + each_productId + '&pageNo=1'
 
-            start_urls.append(target_url)
+    #         start_urls.append(target_url)
     
     '''调试'''
 
-    # start_urls= ['http://baoxian.taobao.com/json/item/purchaseList.do?item_id=540732488665&seller_id=2967530750']
+    start_urls= ['http://baoxian.taobao.com/json/item/purchaseList.do?item_id=540732488665&seller_id=2967530750']
     
     def parse(self,response):
 
@@ -52,4 +52,17 @@ class puchasedInfoSpider(scrapy.Spider):
         purchase_data = {}
         
         for each_data in response_data['data']:
+
+            key_price = each_data['price']
+
+            # 判断purchase_data中是否存在该价格键值对，如果没有则创建，创建时的value为对应each_data下的num
+
+            if purchase_data.__contains__(key_price):
+
+                purchase_data.update({key_price: purchase_data[key_price] + each_data['num']})
             
+            else:
+
+                purchase_data.update({key_price: each_data['num']})
+        
+        yield purchase_data
