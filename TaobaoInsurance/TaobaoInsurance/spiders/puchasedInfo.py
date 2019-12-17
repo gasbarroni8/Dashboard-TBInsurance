@@ -81,6 +81,7 @@ class puchasedInfoSpider(scrapy.Spider):
             last_page = response_data['totalPage']
 
         else:
+            
             last_page = 13333
 
         next_page = int(response.url[response.url.rfind('=') + 1 :]) + 1

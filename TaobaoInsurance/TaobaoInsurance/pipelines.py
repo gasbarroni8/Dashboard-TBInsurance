@@ -310,3 +310,13 @@ class ProductInfoPipeline(object):
         else:
 
             return item
+
+class PurchasedInfoPipeline(object):
+
+    '''PurchasedInfoPipeline处理内容'''
+
+    # 该管道处理由purchasedInfo.py中提交的purchased_item
+
+    # 该管道的识别标识为is_purchased
+
+    # 处理思路
