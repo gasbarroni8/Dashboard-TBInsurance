@@ -19,7 +19,7 @@ class puchasedInfoSpider(scrapy.Spider):
     '''正式'''
 
     doc_sellerInfo = zd_db['seller_info']
-    start_urls=[]
+    start_urls = []
 
     # 根据每个文档中的seller_id和product_list中的product_id拼接链接而成
 
@@ -29,11 +29,12 @@ class puchasedInfoSpider(scrapy.Spider):
 
     for each_seller in data_sellerInfo:
 
-        each_sellerId= each_seller['seller_id']
+        each_sellerId = each_seller['seller_id']
 
-        for each_productId in each_seller['product_list']:
+        for each_productId in each_seller['product_list'] :
 
-            target_url= base_url+'seller_id='+each_sellerId+'&item_id='+ each_productId
+            target_url = base_url + 'seller_id=' + each_sellerId + '&item_id=' + each_productId + '&pageNo=1'
+
             start_urls.append(target_url)
     
     '''调试'''
@@ -44,4 +45,11 @@ class puchasedInfoSpider(scrapy.Spider):
 
         response_data= json.loads(response.text)
         
-    
+        '''处理思路'''
+
+        # 读取totalPage字段，如果超过13333，则循环次数为13333，否则为totalPage
+
+        purchase_data = {}
+        
+        for each_data in response_data['data']:
+            
