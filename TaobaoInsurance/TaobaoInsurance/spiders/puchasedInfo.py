@@ -39,7 +39,7 @@ class puchasedInfoSpider(scrapy.Spider):
     
     '''调试'''
 
-    start_urls= ['http://baoxian.taobao.com/json/item/purchaseList.do?item_id=540732488665&seller_id=2967530750']
+    start_urls= ['http://baoxian.taobao.com/json/item/purchaseList.do?item_id=540732488665&seller_id=2967530750&pageNo=1']
     
     def parse(self,response):
 
@@ -49,20 +49,43 @@ class puchasedInfoSpider(scrapy.Spider):
 
         # 读取totalPage字段，如果超过13333，则循环次数为13333，否则为totalPage
 
-        purchase_data = {}
-        
+        purchased_item = PurchasedInfoItem()
+        purchased_item['is_purchased'] = 1
+        purchased_item['product_id'] = response.url[response.url.find('=') + 1 : response.url.find('&')]
+        purchased_item['data'] = {}
+
         for each_data in response_data['data']:
 
-            key_price = each_data['price']
+            key_date = each_data['time'][:10]
+            key_price= each_data['price']
 
-            # 判断purchase_data中是否存在该价格键值对，如果没有则创建，创建时的value为对应each_data下的num
+            if purchased_item['data'].__contains__(key_date):
 
-            if purchase_data.__contains__(key_price):
 
-                purchase_data.update({key_price: purchase_data[key_price] + each_data['num']})
+                if purchased_item['data'][key_date].__contains__(key_price):
+
+                    purchased_item['data'][key_date].update({key_price: purchased_item['data'][key_date][key_price] + each_data['num']})
+                
+                else:
+
+                    purchased_item['data'][key_date].update({key_price: each_data['num']})
             
             else:
 
-                purchase_data.update({key_price: each_data['num']})
+                purchased_item['data'].update({key_date: {key_price: each_data['num']}})
         
-        yield purchase_data
+        yield purchased_item
+        
+        if response_data['totalPage'] <= 13333:
+
+            last_page = response_data['totalPage']
+
+        else:
+            last_page = 13333
+
+        next_page = int(response.url[response.url.rfind('=') + 1 :]) + 1
+
+        if next_page < last_page:
+
+            new_url = response.url[: response.url.rfind('=') + 1] + str(next_page)
+            yield response.follow(new_url,callback=self.parse)
