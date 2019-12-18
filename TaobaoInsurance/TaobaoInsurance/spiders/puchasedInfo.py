@@ -57,7 +57,7 @@ class puchasedInfoSpider(scrapy.Spider):
         for each_data in response_data['data']:
 
             key_date = each_data['time'][:10]
-            key_price= each_data['price']
+            key_price = each_data['price'][: each_data['price'].find('.')]
 
             if purchased_item['data'].__contains__(key_date):
 
