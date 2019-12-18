@@ -320,3 +320,36 @@ class PurchasedInfoPipeline(object):
     # 该管道的识别标识为is_purchased
 
     # 处理思路
+    # 提取purchased_item中的data字段，判断表中date作为key是否存在，如果存在则更新，如果不存在则添加
+    # 同步完善seller_id
+
+    def __init__(self):
+
+        self.doc_productInfo = zd_db['product_info']
+        self.doc_sellerInfo = zd_db['seller_info']
+        self.doc_purchasedInfo = zd_db['purchased_info']
+        
+    def process_item(self, item, spider):
+        
+        process_data = dict(item)
+        
+        purchased_found = self.doc_purchasedInfo.find_one({'product_id': process_data['product_id']})
+        
+        if purchased_found is None:
+
+            product_name = self.doc_productInfo.find_one({'product_id': process_data['product_id']}).get('product_name')
+            seller_id = self.doc_productInfo.find_one({'product_id': process_data['product_id']}).get('seller_id')
+            process_data.update({'product_name': product_name})
+            process_data.update({'seller_id': seller_id})
+            del process_data['is_purchased']
+            self.doc_purchasedInfo.insert(process_data)
+
+            return item
+
+        else:
+
+            for each_date in process_data['data'].keys():
+
+                if purchased_found['data'].__contains__(each_date):
+
+                    
