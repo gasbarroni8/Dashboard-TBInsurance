@@ -334,22 +334,12 @@ class PurchasedInfoPipeline(object):
         process_data = dict(item)
         
         purchased_found = self.doc_purchasedInfo.find_one({'product_id': process_data['product_id']})
+
+        # 拆解data
         
-        if purchased_found is None:
+        for each_date in process_data['data'].keys():
 
-            product_name = self.doc_productInfo.find_one({'product_id': process_data['product_id']}).get('product_name')
-            seller_id = self.doc_productInfo.find_one({'product_id': process_data['product_id']}).get('seller_id')
-            process_data.update({'product_name': product_name})
-            process_data.update({'seller_id': seller_id})
-            del process_data['is_purchased']
-            self.doc_purchasedInfo.insert(process_data)
-
-            return item
-
-        else:
-
-            for each_date in process_data['data'].keys():
-
-                if purchased_found['data'].__contains__(each_date):
-
-                    
+            process_data.update({each_date: process_data['data'][each_date]})
+            
+        del process_data['data']
+        del 
