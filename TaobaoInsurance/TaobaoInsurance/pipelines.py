@@ -340,6 +340,38 @@ class PurchasedInfoPipeline(object):
         for each_date in process_data['data'].keys():
 
             process_data.update({each_date: process_data['data'][each_date]})
-            
+
+        # 删除不需要的字段
+        
         del process_data['data']
-        del 
+        del process_data['is_purchased']
+
+        if purchased_found is None:
+
+            # 添加seller_id
+
+            seller_id = self.doc_productInfo.find_one({'product_id': process_data['product_id']}).get('seller_id')
+            process_data.update({'seller_id': seller_id})
+
+            # 向表中添加数据
+            
+            self.doc_purchasedInfo.insert(process_data)
+
+            return item
+        
+        else:
+
+            del process_data['product_id']
+            for date_key in process_data.keys():
+
+                if purchased_found.__contains__(date_key):
+
+                    self.doc_purchasedInfo.update_one({'product_id': purchased_found['product_id']}, {'$set': {date_key: purchased_found[date_key] + process_data[date_key]}})
+                    
+                    return item
+
+                else:
+
+                    self.doc_purchasedInfo.update_one({'product_id': purchased_found['product_id']}, {'$set': {date_key: process_data[date_key]}})
+                    
+                    return item

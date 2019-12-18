@@ -70,6 +70,7 @@ ITEM_PIPELINES = {
     'TaobaoInsurance.pipelines.ProductListPipeline': 300,
     'TaobaoInsurance.pipelines.SellerInfoPipeline': 301,
     'TaobaoInsurance.pipelines.ProductInfoPipeline': 302,
+    'TaobaoInsurance.pipelines.PurchasedInfoPipeline': 303
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
