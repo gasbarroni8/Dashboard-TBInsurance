@@ -4,7 +4,7 @@
 #
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
 # See: https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-import pymongo, time, operator,copy
+import pymongo, time, operator, copy, datetime
 
 
 from scrapy.utils.project import get_project_settings
@@ -332,46 +332,70 @@ class PurchasedInfoPipeline(object):
     def process_item(self, item, spider):
         
         process_data = dict(item)
+
+        if process_data.__contains__('is_purchased'):
         
-        purchased_found = self.doc_purchasedInfo.find_one({'product_id': process_data['product_id']})
+            purchased_found = self.doc_purchasedInfo.find_one({'product_id': process_data['product_id']})
 
-        # 拆解data
-        
-        for each_date in process_data['data'].keys():
-
-            process_data.update({each_date: process_data['data'][each_date]})
-
-        # 删除不需要的字段
-        
-        del process_data['data']
-        del process_data['is_purchased']
-
-        if purchased_found is None:
-
-            # 添加seller_id
-
-            seller_id = self.doc_productInfo.find_one({'product_id': process_data['product_id']}).get('seller_id')
-            process_data.update({'seller_id': seller_id})
-
-            # 向表中添加数据
+            # 拆解data
             
-            self.doc_purchasedInfo.insert(process_data)
+            for each_date in process_data['data'].keys():
 
-            return item
-        
-        else:
+                process_data.update({each_date: process_data['data'][each_date]})
 
-            del process_data['product_id']
-            for date_key in process_data.keys():
+            # 删除不需要的字段
+            
+            del process_data['data']
+            del process_data['is_purchased']
 
-                if purchased_found.__contains__(date_key):
+            # print(process_data)
 
-                    self.doc_purchasedInfo.update_one({'product_id': purchased_found['product_id']}, {'$set': {date_key: purchased_found[date_key] + process_data[date_key]}})
+            if purchased_found is None:
+
+                # 添加seller_id
+
+                seller_id = self.doc_productInfo.find_one({'product_id': process_data['product_id']})['seller_id']
+                process_data.update({'seller_id': seller_id})
+
+                # 向表中添加数据
+                
+                self.doc_purchasedInfo.insert(process_data)
+                return item
+            
+            else:
+
+                del process_data['product_id']
+                data_date = datetime.date.today() - datetime.timedelta(days=1)
+                key_date = data_date.isoformat()
+                
+                if process_data.__contains__(key_date):
+
+                    if purchased_found.__contains__(key_date):
+
+                        for each_price in process_data[key_date].keys():
+
+                            if purchased_found[key_date].__contains__(each_price):
+
+                                purchased_found[key_date].update({each_price: purchased_found[key_date][each_price] + process_data[key_date][each_price]})
+                            
+                            else:
+
+                                purchased_found[key_date].update({each_price: process_data[key_date][each_price]})
+                        
+                        self.doc_purchasedInfo.update_one({'product_id': purchased_found['product_id']}, {'$set': {key_date: purchased_found[key_date]}})
+
+                        return item
                     
-                    return item
+                    else:
+
+                        self.doc_purchasedInfo.update_one({'product_id': purchased_found['product_id']}, {'$set': {key_date: process_data[key_date]}})
+
+                        return item
 
                 else:
 
-                    self.doc_purchasedInfo.update_one({'product_id': purchased_found['product_id']}, {'$set': {date_key: process_data[date_key]}})
-                    
                     return item
+        
+        else:
+
+            return item
