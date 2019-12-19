@@ -33,7 +33,7 @@ class purchasedInfoSpider(scrapy.Spider):
 
     #     for each_productId in each_seller['product_list'] :
 
-    #         target_url = base_url + 'seller_id=' + each_sellerId + '&item_id=' + each_productId + '&pageNo=1'
+    #         target_url = base_url + 'item_id=' + each_productId + '&seller_id=' + each_sellerId + '&pageNo=1'
 
     #         start_urls.append(target_url)
     
